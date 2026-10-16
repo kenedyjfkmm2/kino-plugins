@@ -141,6 +141,12 @@ Rules you cannot break (the detail and exact numbers are in AGENTS.md):
   host or author). If the plugin declares "episodes", episodes() must answer for every music and
   podcast ref, even a single track; without "episodes", the item's own ref goes to resolve. Below
   apiVersion 8 such items are dropped.
+- The person's playlists on your plugin (apiVersion 10, Kino 0.9.65): if the service has the
+  person's OWN playlists (their account, not your catalog), you may declare the "playlists"
+  capability; its six functions are each independently optional, including playlists() itself. It
+  is a contract not yet wired into any Kino screen, so do not present it as something already live
+  in the app. Read it at https://kinotvapp.github.io/kino-plugins/en/contract/#playlists before
+  using it; most plugins do not need it.
 - Feature-detect what older Kino lacks: kino.meta and kino.tmdb (Kino 0.9.53) only behind
   `typeof kino.meta === "function"` / `typeof kino.tmdb === "function"`, and the hidden browser's
   captureAll options (Kino 0.9.54) only when `kino.browser.captureAll === true`. kino.device (Kino 0.9.55)
