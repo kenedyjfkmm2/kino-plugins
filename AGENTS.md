@@ -325,14 +325,16 @@ track; `kind: "podcast"` a show, an audiobook or a radio program; optional `arti
 track (one entry); without it, the item's own `ref` goes to `resolve`. Full rules:
 [Music and podcasts](https://kinotvapp.github.io/kino-plugins/en/contract/#music-podcasts).
 
-**Playlists (apiVersion 10, Kino 0.9.65)**: the `playlists` capability lets a plugin expose the
+**Playlists (apiVersion 10, Kino 0.9.65)**: a contract only -- no installed or announced plugin uses
+it, and Kino itself doesn't call any of these six exports anywhere on screen yet; do not present it as
+something already live in the app. The `playlists` capability lets a plugin expose the
 person's own playlists on its own service -- not the pre-existing `KinoPlaylist` M3U/IPTV list the
 person pastes under En vivo, and not `sign`'s `kind: "playlist"` (an HLS playlist request to sign);
-all three are unrelated despite the name. Six exports, every one independently optional (unlike
-`channels`, which requires two, and needing no approval prompt): `playlists()`, `playlistItems(arg)`,
-`playlistCreate(arg)`, `playlistAddItem(arg)`, `playlistRemoveItem(arg)`, `playlistReorder(arg)`;
-declare the capability and export only the ones your service actually supports. `playlistItems`
-answers the same `Page` shape as `browse`. Full rules:
+all three are unrelated despite the name. Six exports, every one independently optional and needing
+no approval prompt (unlike `channels`, which requires two and does need one): `playlists()`,
+`playlistItems(arg)`, `playlistCreate(arg)`, `playlistAddItem(arg)`, `playlistRemoveItem(arg)`,
+`playlistReorder(arg)`; declare the capability and export only the ones your service actually
+supports. `playlistItems` answers the same `Page` shape as `browse`. Full rules:
 [Playlists](https://kinotvapp.github.io/kino-plugins/en/contract/#playlists).
 
 **Feature-detect what older Kino lacks**: `kino.meta` and `kino.tmdb` (Kino 0.9.53, no new apiVersion)
