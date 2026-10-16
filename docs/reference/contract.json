@@ -4,7 +4,7 @@
   "maxApiVersion": 9,
   "apiVersionFromApp": { "6": "0.9.50", "7": "0.9.51", "8": "0.9.54", "9": "0.9.55" },
   "additiveFromApp": { "kino.meta": "0.9.53", "kino.tmdb": "0.9.53", "catalogOnly": "0.9.54", "kino.browser.captureAll": "0.9.54", "fetch.errorHost": "0.9.55", "kino.fetchAnyHost": "0.9.55",
-    "kino.meta.byTitle": "0.9.55", "kino.device": "0.9.55", "kino.seed": "0.9.55" },
+    "kino.meta.byTitle": "0.9.55", "kino.device": "0.9.55", "kino.seed": "0.9.55", "panel.loading": "0.9.64" },
   "capabilities": {
     "names": ["search", "home", "browse", "episodes", "resolve", "download", "drm", "channels", "migrate", "scopedSearch", "meta", "subtitles", "tracking", "segments"],
     "required": ["resolve"],
@@ -130,7 +130,8 @@
   "output": {
     "section": { "apiVersion": 6, "maxTabs": 8, "maxTabLabelChars": 24, "maxHeroTextChars": 300 },
     "categories": { "apiVersion": 6, "export": "categories", "maxCategories": 24, "maxTitleChars": 40 },
-    "panel": { "maxTopElements": 40, "maxTitleChars": 60, "maxMessageChars": 160, "maxTabs": 6, "maxTabLabelChars": 24, "maxQrUrlChars": 512, "minRefreshMs": 2000, "maxRefreshMs": 60000, "maxStatusChars": 200, "maxLabelChars": 40, "maxConfirmChars": 160, "maxHintChars": 80, "maxPlaceholderChars": 40, "maxAltChars": 200, "maxValueChars": 500, "maxSaveKeys": 50, "maxOptions": 20, "maxOptionChars": 40, "storedValueMaxChars": 500, "storedMaxKeysPerScope": 50 },
+    "panel": { "maxTopElements": 40, "maxTitleChars": 60, "maxMessageChars": 160, "maxTabs": 6, "maxTabLabelChars": 24, "maxQrUrlChars": 512, "minRefreshMs": 2000, "maxRefreshMs": 60000, "maxStatusChars": 200, "maxLabelChars": 40, "maxConfirmChars": 160, "maxHintChars": 80, "maxPlaceholderChars": 40, "maxAltChars": 200, "maxValueChars": 500, "maxSaveKeys": 50, "maxOptions": 20, "maxOptionChars": 40, "storedValueMaxChars": 500, "storedMaxKeysPerScope": 50,
+      "loadingElement": { "$comment": "Kino 0.9.64, additive (no apiVersion): { type: \"loading\", text?, textEn? } draws a spinner with the text (else Kino's «Cargando…»). Answer at once with the tab's shell plus a loading element and a refreshMs, and the next call fills it in. From Kino 0.9.64 the panel context carries features: [\"loading\"]; an older Kino sends no features and drops the element as an unknown type, so check context.features and answer a status line there instead.", "type": "loading", "fromApp": "0.9.64", "maxTextChars": 200, "contextFeature": "loading" } },
     "layout": { "maxDepth": 4, "maxRowChildren": 6, "maxNodes": 120, "maxCardTitleChars": 60, "maxTextChars": 1000, "maxLogLines": 10 },
     "player": { "speeds": [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2], "minSeekStepMs": 5000, "maxSeekStepMs": 120000, "maxMarkers": 30, "maxMarkerLabelChars": 24, "maxCountdownS": 30, "resizes": ["fit", "fill", "zoom", "4:3", "16:9", "21:9"] },
     "details": { "apiVersion": 8, "fromApp": "0.9.54", "export": "details", "capability": null, "askedFor": "movie", "fields": ["title", "poster", "backdrop", "overview", "ids", "genres", "year", "rating", "runtimeMinutes"], "seriesFields": ["rating", "runtimeMinutes", "ids.mal", "ids.anilist", "ids.kitsu"], "ids": ["tmdb", "imdb", "mal", "anilist", "kitsu"], "reservedExportFromApiVersion": 8 },

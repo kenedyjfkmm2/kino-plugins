@@ -429,6 +429,11 @@ interface KinoPanelContext {
   values: { video: Record<string, KinoPanelValue>; plugin: Record<string, KinoPanelValue> };
   /** The player's own properties in effect: the step, the speed, the resize mode and your `autoNext` when you set one. */
   player: { seekStepMs: number; speed?: number; resize?: KinoPlayerResize; autoNext?: { enabled: boolean; countdownS: number; nextRef?: string } };
+  /**
+   * Kino 0.9.64 (additive): what this Kino draws beyond apiVersion 9's panel; `"loading"`: the `loading` element. Absent on
+   * an older Kino, which drops that element: check it before you answer with one.
+   */
+  features?: "loading"[];
 }
 
 type KinoPanelValue = string | boolean | number | null;
@@ -468,6 +473,12 @@ type KinoPanelElement =
   | { type: "text-input"; key: string; label: string; labelEn?: string; scope?: KinoPanelScope; hint?: string; hintEn?: string; placeholder?: string; placeholderEn?: string }
   /** https, up to 512 characters, on a public host with a dot, or a public IPv4 address (never the device or the home network: no single-label or local name, private address or IPv6 literal). */
   | { type: "qr"; url: string; label?: string; labelEn?: string }
+  /**
+   * Kino 0.9.64 (additive, any apiVersion): a spinner, with `text` beside it (else Kino's «Cargando…»). Answer at once
+   * with the tab's shell and this element, and set `refreshMs` so Kino asks again for the finished tab. Send it only when
+   * `context.features` includes "loading": an older Kino drops it as an unknown element (answer a `status` line there).
+   */
+  | { type: "loading"; text?: string; textEn?: string }
   /** The series' episodes, the current one highlighted; choosing one plays it. */
   | { type: "episodes"; ref: string }
   /** Not in this Kino: dropped ("needs a newer Kino"). Reserved for a later version. */
@@ -480,7 +491,10 @@ interface KinoPanel {
   /** Up to 60 characters. */
   title?: string;
   titleEn?: string;
-  /** `modal` (default): centred over the video. `panel`: a side strip with the video visible behind. */
+  /**
+   * Accepted for compatibility; both values look the same: the panel is a drawer over the whole player
+   * (from the right on TV and a phone held sideways, from the bottom on a phone held upright). The video keeps playing.
+   */
   presentation?: "modal" | "panel";
   /** `#RRGGBB`; kept only when it passes the same rules as the manifest theme's `accent`. */
   accent?: string;

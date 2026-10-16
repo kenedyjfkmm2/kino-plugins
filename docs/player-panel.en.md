@@ -76,6 +76,7 @@ carries **exactly** these keys (an optional field Kino does not know is left out
 | `tab?` | the tab the person asked for (absent the first time). |
 | `values` | what the person (or you) saved: `{ video: {…}, plugin: {…} }`. |
 | `player` | the player's properties in effect: `seekStepMs`, `speed?`, `resize?` (`"fit"` if nobody changed it) and your `autoNext?` if you set one. |
+| `features?` | **Kino 0.9.64, additive**: what this Kino draws beyond apiVersion 9's panel; `"loading"` means it understands the `loading` element. Absent on an older Kino, which drops it as an unknown type: check it before you answer with one. |
 
 The context carries nothing about other plugins or the person's account.
 
@@ -93,11 +94,10 @@ return {
 };
 ```
 
-- **`presentation`**: `"modal"` is centred over the video (at most 640 dp wide, up to 80 % of the height) with
-  a scrim behind it; `"panel"` is a **side strip** (40 % of the width, at least 360 dp) with the video visible
-  beside it, and on a phone held upright it is a **bottom sheet** (60 % of the height). Any other value is
-  `"modal"`. While the first answer arrives Kino uses the presentation that plugin's panel last showed in the
-  player, or `modal` if there is none.
+- **`presentation`**: accepted for compatibility and no longer read: every panel draws the same way, as a
+  **drawer** over the whole player (from the right on the TV and on a phone held sideways, from the bottom on
+  a phone held upright), with the video visible and still playing behind it. Any value (`"modal"`, `"panel"` or
+  none) looks the same.
 - **`accent`**: a `#RRGGBB` that paints the top bar, the states and the focus. It follows the same contrast rules
   as [`theme`](section-theme.md#theme)'s `accent`; if it fails, Kino's own is used and the panel stays.
 - **`refreshMs`**: asks Kino to call `panel(context)` again every so often while the panel is open (2000 to
@@ -126,6 +126,7 @@ with the same key is dropped). Anything that can be pressed or holds a value car
 | `select` | `key`, `label`, `scope`, `options`, `hint?`, `autoSave?` | a list of 1 to 20 options `{ value, label }` (each 1 to 40, values distinct; one bad option drops the `select`). |
 | `text-input` | `key`, `label`, `scope`, `hint?`, `placeholder?` | a text field. Calls `panelAction` with `trigger: "submit"` only on confirm (the TV keyboard's "Listo", the phone keyboard's action), **never per keystroke**. `placeholder` up to 40. |
 | `qr` | `url`, `label?` | a QR code plus the link's text; `https` only, up to 512 characters, on a public host **with a dot** (or a public IPv4 address): never the device or the home network (no local or single-name host, private address or IPv6 literal). On the TV it is read with the phone's camera; on the phone, tapping it opens the link. Kino never opens it by itself. `label` up to 40. |
+| `loading` | `text?` | **Kino 0.9.64, additive (any apiVersion)**: a spinner with `text` beside it (if missing, Kino's "Cargando…"). Answer at once with the tab's shell and this element, and set `refreshMs` so Kino asks again once you are done. Send it only when `context.features` includes `"loading"`: an older Kino drops it as an unknown element (answer with a `status` there instead). |
 | `episodes` | `ref` | the list of the playing series' episodes with the current one highlighted; choosing one plays it, through the same path as "next episode". It may be empty (a movie, for example) and then takes no focus. |
 | `row`, `col`, `card` | see [layout](#layout) | containers. |
 | `ai`, `chat` | | **not in this version**: dropped ("needs a newer Kino"). |
@@ -169,13 +170,13 @@ overflows on a TV or a phone.
 
 ## Scroll and focus { #focus }
 
-- Both presentations **scroll** when the content does not fit: by touch on the phone; on the TV the focused
+- The panel **scrolls** when the content does not fit: by touch on the phone; on the TV the focused
   element is always brought into view, with a margin (D-pad up/down moves focus and scrolls).
 - Text, sections, images and status lines take no focus (they are scrolled past). Buttons, inputs, `episodes`
   and `qr` do.
 - **TV**: focus starts on the first element that can take it (the close X if there is none); inside a row,
-  left/right; between rows, up/down, in reading order. **Focus does not leave the panel** (neither modal nor strip)
-  and Back closes it: to reach the player's controls, close it first. While the panel is open the player does not
+  left/right; between rows, up/down, in reading order. **Focus does not leave the panel** and Back closes it: to
+  reach the player's controls, close it first. While the panel is open the player does not
   steal focus. The whole panel body is reachable with the D-pad (the QR and long text blocks are focus stops so they
   scroll into view) and, if the focused control disappears when your answer replaces the panel, focus returns to
   the first control.

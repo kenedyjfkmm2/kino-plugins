@@ -77,6 +77,7 @@ Kino lo llama al abrir el panel, al tocar una pestaña (con `context.tab`) y cad
 | `tab?` | la pestaña que pidió la persona (la primera vez, ausente). |
 | `values` | lo que la persona (o tú) guardó: `{ video: {…}, plugin: {…} }`. |
 | `player` | las propiedades del reproductor en vigor: `seekStepMs`, `speed?`, `resize?` (`"fit"` si nadie lo cambió) y tu `autoNext?` si lo pusiste. |
+| `features?` | **Kino 0.9.64, aditivo**: qué dibuja este Kino además del panel de apiVersion 9; `"loading"` significa que entiende el elemento `loading`. Ausente en un Kino más viejo, que lo descarta como un tipo desconocido: revísalo antes de responder con uno. |
 
 El contexto no lleva nada de otros plugins ni de la cuenta de la persona.
 
@@ -94,11 +95,10 @@ return {
 };
 ```
 
-- **`presentation`**: `"modal"` se centra sobre el video (ancho máximo 640 dp, hasta el 80 % del alto) con un
-  velo detrás; `"panel"` es una **franja lateral** (el 40 % del ancho, mínimo 360 dp) con el video visible al
-  lado, y en un celular en vertical es una **hoja desde abajo** (el 60 % del alto). Cualquier otro valor es
-  `"modal"`. Mientras llega la primera respuesta Kino usa la presentación que ese plugin mostró la última vez en
-  el reproductor, o `modal` si no hay ninguna.
+- **`presentation`**: se acepta por compatibilidad y ya no se lee: todo panel se dibuja igual, como una
+  **cajonera** sobre todo el reproductor (desde la derecha en la TV y en un celular en horizontal, desde abajo
+  en un celular en vertical), con el video visible y sonando detrás. Cualquier valor (`"modal"`, `"panel"` o
+  ninguno) se ve igual.
 - **`accent`**: un `#RRGGBB` que pinta la barra de arriba, los estados y el foco. Sigue las mismas reglas de
   contraste que el `accent` de [`theme`](section-theme.md#theme); si falla, se usa el de Kino y el panel sigue.
 - **`refreshMs`**: pide a Kino llamar `panel(context)` otra vez cada tanto mientras el panel está abierto
@@ -127,6 +127,7 @@ se dibuja). Una `key` es de 1 a 128 caracteres de `A-Z a-z 0-9 . _ ~ -` y **no s
 | `select` | `key`, `label`, `scope`, `options`, `hint?`, `autoSave?` | una lista de 1 a 20 opciones `{ value, label }` (cada una de 1 a 40, valores distintos; una opción mala descarta el `select`). |
 | `text-input` | `key`, `label`, `scope`, `hint?`, `placeholder?` | un campo de texto. Llama `panelAction` con `trigger: "submit"` solo al confirmar (el «Listo» del teclado de la TV, la acción del teclado del celular), **nunca por cada letra**. `placeholder` hasta 40. |
 | `qr` | `url`, `label?` | un código QR más el texto del enlace; solo `https`, hasta 512 caracteres, en un host público **con punto** (o una dirección IPv4 pública; nunca el aparato ni la red de la casa: ni un host local o de una sola palabra, ni una dirección privada, ni una dirección IPv6). En la TV se lee con la cámara del celular; en el celular, tocarlo abre el enlace. Kino nunca lo abre solo. `label` hasta 40. |
+| `loading` | `text?` | **Kino 0.9.64, aditivo (cualquier apiVersion)**: un spinner con `text` al lado (si falta, «Cargando…» de Kino). Responde de una con la carcasa de la pestaña y este elemento, y pon `refreshMs` para que Kino vuelva a preguntar cuando termines. Mándalo solo si `context.features` incluye `"loading"`: un Kino más viejo lo descarta como un elemento desconocido (ahí responde con un `status`). |
 | `episodes` | `ref` | la lista de episodios de la serie que suena, con el actual resaltado; elegir uno lo reproduce, por el mismo camino que «siguiente episodio». Puede quedar vacía (una película, por ejemplo) y entonces no toma foco. |
 | `row`, `col`, `card` | mira [el diseño](#layout) | contenedores. |
 | `ai`, `chat` | | **no están en esta versión**: se descartan («needs a newer Kino»). |
@@ -171,13 +172,13 @@ nada se desborda en un TV ni en un celular.
 
 ## Desplazamiento y foco { #focus }
 
-- Los dos paneles **se desplazan** cuando el contenido no cabe: en el celular con el dedo; en la TV el foco
+- El panel **se desplaza** cuando el contenido no cabe: en el celular con el dedo; en la TV el foco
   siempre se trae a la vista, con un margen (el D-pad arriba/abajo mueve el foco y desplaza).
 - El texto, las secciones, las imágenes y los estados no toman foco (se pasan de largo). Toman foco los botones,
   los campos, los `episodes` y los `qr`.
 - **TV**: el foco empieza en el primer elemento que lo toma (si no hay ninguno, en la X de cerrar); dentro de una fila,
-  izquierda/derecha; entre filas, arriba/abajo, en orden de lectura. **El foco no sale del panel** (ni del modal
-  ni de la franja) y Atrás lo cierra: para llegar a los controles del reproductor, se cierra primero. Mientras
+  izquierda/derecha; entre filas, arriba/abajo, en orden de lectura. **El foco no sale del panel** y Atrás lo
+  cierra: para llegar a los controles del reproductor, se cierra primero. Mientras
   el panel está abierto el reproductor no le roba el foco. Todo el cuerpo del panel se alcanza con el D-pad (el QR y
   los bloques de texto largos son paradas de foco para que se desplacen a la vista) y, si el control con foco
   desaparece cuando tu respuesta reemplaza el panel, el foco vuelve al primer control.
