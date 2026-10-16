@@ -541,6 +541,70 @@ Limits: a `music` or `podcast` item from a plugin below `"apiVersion": 8` is dro
 the log), and the rest of the answer stays. Audio items count against the same row and page sizes as
 any item, and `adult: true` follows the same 18+ lock.
 
+## The person's playlists on your plugin (apiVersion 10, Kino 0.9.65) { #playlists }
+
+With `"apiVersion": 10` a plugin may declare the `"playlists"` capability to expose, inside Kino's
+"Mis listas", the playlists the person already has in their account on that service, next to their
+own. Unlike music and podcasts (above), this really is a capability -- the same as `channels` or
+`tracking` -- but the other way around from `channels`: its six exports are **all independently
+optional**, including `playlists()` itself. Declare the capability and export only the ones your
+service actually supports; not one of them is required. No red approval. An older Kino refuses an
+apiVersion 10 plugin with "Este plugin necesita una versión más nueva de Kino", so declare 10 only
+when you declare this capability.
+
+`"playlist"` means three distinct, unrelated things in this SDK: the ones in this section, on your
+plugin's own service (`KinoHostedPlaylist`); the M3U/IPTV list you build for
+[Live channels](live-channels.md#live-contract) (`KinoPlaylist`, and `contract.json`'s
+`live.maxPlaylists` limits); and the `kind: "playlist"` you sign in
+[Signing every request](signed-streams.md) (an HLS manifest request, nothing to do with a list of
+titles). None of the three shares a capability or an export with the others: each lives only in its
+own section.
+
+```js
+export async function playlists() {
+  return [{ id: "42", title: "My usual playlist", itemCount: 12 }];
+}
+
+export async function playlistItems({ playlistId, cursor }) {   // same shape as browse
+  return { items: [ /* ...KinoItem[]... */ ], next: null };
+}
+
+export async function playlistCreate({ title }) {
+  return { id: await createRemotePlaylist(title) };
+}
+
+export async function playlistAddItem({ playlistId, ref }) { /* ... */ }
+export async function playlistRemoveItem({ playlistId, ref }) { /* ... */ }
+export async function playlistReorder({ playlistId, refs }) { /* ... */ }
+```
+
+What each export answers:
+
+- `playlists()` answers the playlists the person already has on the service: an array of
+  `{ id, title, itemCount }` (`KinoHostedPlaylist`).
+- `playlistItems({ playlistId, cursor })` answers a playlist's contents, in the same shape as
+  [`browse`](#returns): an array of `KinoItem` or a `Page` with `next`.
+- `playlistCreate({ title })` answers `{ id }` when your service can create a new playlist. Without
+  this export, Kino never offers "Crear lista nueva" for your plugin.
+- `playlistAddItem({ playlistId, ref })` and `playlistRemoveItem({ playlistId, ref })` add or remove
+  an item; they are independent of each other -- you may have one without the other.
+- `playlistReorder({ playlistId, refs })` gets the playlist's whole new order, as the array of every
+  item's `ref`, in the final order.
+
+What the person sees in "Mis listas" with Kino 0.9.65: a playlist from your plugin is labelled
+"‹name› · ‹plugin›", mixed in with their own. Only the button for an operation you actually exported
+shows up -- "Agregar" with `playlistAddItem`, "Quitar" with `playlistRemoveItem`, "Reordenar" with
+`playlistReorder` -- never a disabled button, never a "not implemented" error; a plugin that exports
+only `playlists` and `playlistItems` looks read-only, with none of the three. **Renaming the playlist
+or deleting it outright are not part of this capability**: there is no export for either one, so
+those two options in the "Mis listas" menu exist only for one of the person's own native playlists,
+never for a plugin's.
+
+Limits: below `"apiVersion": 10` Kino never calls any of these six exports, same as any export the
+manifest didn't declare. In the "Agregar a lista" sheet, a playlist from your plugin only shows up
+for a title that comes from the same plugin that hosts it -- adding a video to "your YouTube
+playlist" only makes sense for a video from that YouTube plugin.
+
 ## Subtitles for any title { #subtitles }
 
 Export `subtitles({ imdbId, tmdbId, kind, season, episode, title, year, languages, file })` and Kino lists

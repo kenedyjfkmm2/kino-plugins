@@ -305,6 +305,16 @@ interface KinoPlaylist {
 }
 
 /**
+ * apiVersion 10, capability "playlists": one of the person's own playlists on that plugin's service
+ * (not an M3U/IPTV channel list — see {@link KinoPlaylist} for that, an unrelated, older concept).
+ */
+interface KinoHostedPlaylist {
+  id: string;
+  title: string;
+  itemCount: number;
+}
+
+/**
  * One channel: give `ref` (resolved on play, exactly like a `live` item's) or `stream` (played as
  * is, checked like `resolve()`'s answer). With both, the stream plays and `ref` is the fallback.
  * An `id` starting with `~` is reserved for Kino and dropped.
@@ -626,6 +636,27 @@ interface KinoPlugin {
   liveSearch?(arg: { query: string }): Promise<KinoLiveChannelPage | KinoLiveChannel[]>;
   /** apiVersion 3, optional with "channels". At most 50 channels and a 24 h window per call. */
   guide?(arg: { channelIds: string[]; from: number; to: number }): Promise<KinoGuideEntry[]>;
+  /**
+   * apiVersion 10, capability "playlists" (optional with it, like every function below). The
+   * playlists already in the person's account on this service.
+   */
+  playlists?(): Promise<KinoHostedPlaylist[]>;
+  /**
+   * apiVersion 10, optional with "playlists". A page of one playlist's items, the same shape as
+   * {@link KinoPlugin.browse}.
+   */
+  playlistItems?(arg: { playlistId: string; cursor: string | null }): Promise<KinoPage | KinoItem[]>;
+  /**
+   * apiVersion 10, optional with "playlists". Absent means Kino never offers "crear lista nueva" for
+   * this plugin.
+   */
+  playlistCreate?(arg: { title: string }): Promise<{ id: string }>;
+  /** apiVersion 10, optional with "playlists", independently of playlistRemoveItem. */
+  playlistAddItem?(arg: { playlistId: string; ref: string }): Promise<void>;
+  /** apiVersion 10, optional with "playlists", independently of playlistAddItem. */
+  playlistRemoveItem?(arg: { playlistId: string; ref: string }): Promise<void>;
+  /** apiVersion 10, optional with "playlists". The new full order, as a list of every item's `ref`. */
+  playlistReorder?(arg: { playlistId: string; refs: string[] }): Promise<void>;
   /**
    * The settings form's texts (manifest, not code): since Kino 0.9.55 a setting may add `labelEn`, `hintEn` and (an action,
    * next to `confirm`) `confirmEn`, an option and a list field `labelEn` (a field also `hintEn`), each with the base field's

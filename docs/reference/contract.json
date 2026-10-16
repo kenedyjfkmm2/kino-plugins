@@ -1,23 +1,23 @@
 {
-  "$comment": "Kino plugin contract, apiVersion 1 to 9. The single source of truth for every number and rule a plugin meets. The app checks each value against its own code, and a test in the app pins this file to it; sdk/validate.mjs, sdk/run.mjs and the guide's tables read this file.",
-  "apiVersion": 9,
-  "maxApiVersion": 9,
-  "apiVersionFromApp": { "6": "0.9.50", "7": "0.9.51", "8": "0.9.54", "9": "0.9.55" },
+  "$comment": "Kino plugin contract, apiVersion 1 to 10. The single source of truth for every number and rule a plugin meets. The app checks each value against its own code, and a test in the app pins this file to it; sdk/validate.mjs, sdk/run.mjs and the guide's tables read this file.",
+  "apiVersion": 10,
+  "maxApiVersion": 10,
+  "apiVersionFromApp": { "6": "0.9.50", "7": "0.9.51", "8": "0.9.54", "9": "0.9.55", "10": "0.9.65" },
   "additiveFromApp": { "kino.meta": "0.9.53", "kino.tmdb": "0.9.53", "catalogOnly": "0.9.54", "kino.browser.captureAll": "0.9.54", "fetch.errorHost": "0.9.55", "kino.fetchAnyHost": "0.9.55",
     "kino.meta.byTitle": "0.9.55", "kino.device": "0.9.55", "kino.seed": "0.9.55", "panel.loading": "0.9.64" },
   "capabilities": {
-    "names": ["search", "home", "browse", "episodes", "resolve", "download", "drm", "channels", "migrate", "scopedSearch", "meta", "subtitles", "tracking", "segments"],
+    "names": ["search", "home", "browse", "episodes", "resolve", "download", "drm", "channels", "migrate", "scopedSearch", "meta", "subtitles", "tracking", "segments", "playlists"],
     "required": ["resolve"],
     "atLeastOneOf": ["search", "home"],
     "standalone": ["subtitles", "tracking", "segments"],
     "anyPluginExports": ["subtitles"],
     "declarative": ["download", "drm", "scopedSearch"],
-    "apiVersions": { "download": 2, "drm": 2, "channels": 3, "migrate": 6, "scopedSearch": 6, "meta": 6, "tracking": 7, "segments": 7 },
+    "apiVersions": { "download": 2, "drm": 2, "channels": 3, "migrate": 6, "scopedSearch": 6, "meta": 6, "tracking": 7, "segments": 7, "playlists": 10 },
     "requires": { "scopedSearch": "search" },
     "requiresMessage": "The \"{capability}\" capability also needs \"{requires}\"",
     "needsApproval": ["download", "drm", "channels", "migrate", "tracking"],
-    "exports": { "channels": ["liveCategories", "liveChannels"], "tracking": ["track"] },
-    "optionalExports": { "channels": ["guide", "liveSearch"], "resolve": ["sign"] }
+    "exports": { "channels": ["liveCategories", "liveChannels"], "tracking": ["track"], "playlists": [] },
+    "optionalExports": { "channels": ["guide", "liveSearch"], "resolve": ["sign"], "playlists": ["playlists", "playlistItems", "playlistCreate", "playlistAddItem", "playlistRemoveItem", "playlistReorder"] }
   },
   "manifest": {
     "maxBytes": 16384,

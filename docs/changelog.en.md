@@ -16,6 +16,22 @@ What changed in Kino that matters when you write a plugin, by app version. Every
   vocabulary ids, and send `ids`/TMDB and `year` so a title is one card across sources.
   [What the Home does with your categories](categories.md#how).
 
+## Kino 0.9.65: `apiVersion` 10, the `playlists` capability { #v0965 }
+
+(Not released yet.) **`apiVersion` 10 = Kino 0.9.65.** The contract (`contract.json`) now says
+`maxApiVersion` 10 and `kino.apiVersion` reports 10. Kino 0.9.64 and older refuse a manifest with
+`"apiVersion": 10` ("Este plugin necesita una versión más nueva de Kino"), so declare 10 only if you
+use the `playlists` capability.
+
+- **`playlists`** (apiVersion 10): a plugin can expose, inside Kino's "Mis listas", the playlists
+  the person already has in your service's account, next to their own. Six exports, every one
+  independently optional -- unlike `channels`, which requires two --, not even `playlists()` itself:
+  `playlists()`, `playlistItems({ playlistId, cursor })`, `playlistCreate({ title })`,
+  `playlistAddItem({ playlistId, ref })`, `playlistRemoveItem({ playlistId, ref })` and
+  `playlistReorder({ playlistId, refs })`. Nothing to do with [`KinoPlaylist`](live-channels.md#live-contract)
+  (the M3U/IPTV list under En vivo) or the `kind: "playlist"` signed in [`sign()`](signed-streams.md).
+  [Playlists](contract.md#playlists).
+
 ## Kino 0.9.55: `apiVersion` 9, the player panel, `fetchHosts` on hand-written plugins, English texts, `kino.meta` by title { #v0955 }
 
 <span id="next"></span>(Released 2026-10-08.) **`apiVersion` 9 = Kino 0.9.55.** The contract (`contract.json`) now says

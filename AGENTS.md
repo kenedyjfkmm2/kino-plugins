@@ -325,6 +325,16 @@ track; `kind: "podcast"` a show, an audiobook or a radio program; optional `arti
 track (one entry); without it, the item's own `ref` goes to `resolve`. Full rules:
 [Music and podcasts](https://kinotvapp.github.io/kino-plugins/en/contract/#music-podcasts).
 
+**Playlists (apiVersion 10, Kino 0.9.65)**: the `playlists` capability lets a plugin expose the
+person's own playlists on its own service -- not the pre-existing `KinoPlaylist` M3U/IPTV list the
+person pastes under En vivo, and not `sign`'s `kind: "playlist"` (an HLS playlist request to sign);
+all three are unrelated despite the name. Six exports, every one independently optional (unlike
+`channels`, which requires two, and needing no approval prompt): `playlists()`, `playlistItems(arg)`,
+`playlistCreate(arg)`, `playlistAddItem(arg)`, `playlistRemoveItem(arg)`, `playlistReorder(arg)`;
+declare the capability and export only the ones your service actually supports. `playlistItems`
+answers the same `Page` shape as `browse`. Full rules:
+[Playlists](https://kinotvapp.github.io/kino-plugins/en/contract/#playlists).
+
 **Feature-detect what older Kino lacks**: `kino.meta` and `kino.tmdb` (Kino 0.9.53, no new apiVersion)
 only behind `typeof kino.meta === "function"` / `typeof kino.tmdb === "function"`; the hidden
 browser's `captureAll`, `alsoMatch`, `waitForCookie` and `returnCookiesOnTimeout` options (Kino 0.9.54) only when
@@ -597,11 +607,16 @@ people. See
       language (it may be `"en-US"` from Kino 0.9.54); no secrets in the repository.
 - [ ] `version` raised; `apiVersion` is the lowest that works (6 only for an apiVersion 6 feature:
       it needs Kino 0.9.50+; 7 only for `tracking` or `segments`: it needs Kino 0.9.51+; 8 only for
-      `music`/`podcast` items or `details`: it needs Kino 0.9.54+).
+      `music`/`podcast` items or `details`: it needs Kino 0.9.54+; 10 only for the `playlists`
+      capability: it needs Kino 0.9.65+).
 - [ ] A plugin with no video of its own declares `"catalogOnly": true` and still exports a `resolve`
       that throws `not_found` (for Kino 0.9.53 and older).
 - [ ] Audio: every audio item has `kind` `"music"` or `"podcast"` and `"apiVersion": 8`; with
       `episodes` declared, `episodes(ref)` answers every audio ref, even a single track.
+- [ ] Playlists: if you export any of `playlists`, `playlistItems`, `playlistCreate`,
+      `playlistAddItem`, `playlistRemoveItem` or `playlistReorder`, declare the `playlists`
+      capability and `"apiVersion": 10`; export only the functions your service actually supports --
+      none is required.
 - [ ] No helper exported under the name `details` unless it is the real `details` export (reserved
       from apiVersion 8).
 - [ ] `kino.meta`, `kino.tmdb` and the `captureAll` options are used only behind their feature checks

@@ -16,6 +16,22 @@ está en [el contrato](contract.md) y en [los archivos de referencia](reference/
   preferencia con los ids del vocabulario, y manda `ids`/TMDB y `year` para que un título sea una sola tarjeta entre
   fuentes. [Qué hace el Inicio con tus categorías](categories.md#how).
 
+## Kino 0.9.65: `apiVersion` 10, la capacidad `playlists` { #v0965 }
+
+(Todavía no publicada.) **`apiVersion` 10 = Kino 0.9.65.** El contrato (`contract.json`) dice ahora
+`maxApiVersion` 10 y `kino.apiVersion` informa 10. Kino 0.9.64 y anteriores rechazan un manifiesto con
+`"apiVersion": 10` ("Este plugin necesita una versión más nueva de Kino"), así que declara 10 solo si
+usas la capacidad `playlists`.
+
+- **`playlists`** (apiVersion 10): un plugin puede exponer, dentro de "Mis listas" de Kino, las
+  listas que la persona ya tiene en la cuenta de tu servicio, junto a las suyas. Seis exports, todos
+  independientemente opcionales -- a diferencia de `channels`, que exige dos --, ni siquiera
+  `playlists()` mismo: `playlists()`, `playlistItems({ playlistId, cursor })`,
+  `playlistCreate({ title })`, `playlistAddItem({ playlistId, ref })`,
+  `playlistRemoveItem({ playlistId, ref })` y `playlistReorder({ playlistId, refs })`. No tiene nada
+  que ver con [`KinoPlaylist`](live-channels.md#live-contract) (la lista M3U/IPTV de En vivo) ni con
+  el `kind: "playlist"` que firma [`sign()`](signed-streams.md). [Playlists](contract.md#playlists).
+
 ## Kino 0.9.55: `apiVersion` 9, panel del reproductor, `fetchHosts` en plugins escritos a mano, textos en inglés, `kino.meta` por título { #v0955 }
 
 <span id="next"></span>(Publicada el 8 de octubre de 2026.) **`apiVersion` 9 = Kino 0.9.55.** El contrato (`contract.json`) ahora dice

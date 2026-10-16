@@ -562,6 +562,69 @@ Límites: un ítem `music` o `podcast` de un plugin por debajo de `"apiVersion":
 línea en el log), y el resto de la respuesta se queda. Los ítems de audio cuentan para los mismos
 tamaños de fila y de página que cualquier ítem, y `adult: true` sigue el mismo bloqueo +18.
 
+## Playlists de la persona en el plugin (apiVersion 10, Kino 0.9.65) { #playlists }
+
+Con `"apiVersion": 10` un plugin puede declarar la capacidad `"playlists"` para exponer, dentro de
+"Mis listas" de Kino, las listas que la persona ya tiene en su cuenta de ese servicio, junto a las
+suyas. A diferencia de música y podcasts (arriba), esta sí es una capacidad de verdad -- igual que
+`channels` o `tracking` -- pero al revés de `channels`: sus seis exports son **todos
+independientemente opcionales**, incluido `playlists()` mismo. Declara la capacidad y exporta solo
+los que tu servicio sabe hacer; no hace falta ni uno. Sin aprobación en rojo. Un Kino anterior a 0.9.65
+rechaza un plugin apiVersion 10 con "Este plugin necesita una versión más nueva de Kino", así que
+declara 10 solo cuando declares esta capacidad.
+
+`"playlist"` significa tres cosas distintas y sin relación en este SDK: las de esta sección, en el
+servicio de tu plugin (`KinoHostedPlaylist`); la lista M3U/IPTV que armas para
+[Canales en vivo](live-channels.md#live-contract) (`KinoPlaylist`, y los límites `live.maxPlaylists` de
+`contract.json`); y el `kind: "playlist"` que firmas en [Firma por petición](signed-streams.md)
+(una petición de manifiesto HLS, nada que ver con una lista de títulos). Ninguna capacidad ni export de
+una aplica a las otras dos: cada una vive solo en su propia sección.
+
+```js
+export async function playlists() {
+  return [{ id: "42", title: "Mi lista de siempre", itemCount: 12 }];
+}
+
+export async function playlistItems({ playlistId, cursor }) {   // misma forma que browse
+  return { items: [ /* ...KinoItem[]... */ ], next: null };
+}
+
+export async function playlistCreate({ title }) {
+  return { id: await createRemotePlaylist(title) };
+}
+
+export async function playlistAddItem({ playlistId, ref }) { /* ... */ }
+export async function playlistRemoveItem({ playlistId, ref }) { /* ... */ }
+export async function playlistReorder({ playlistId, refs }) { /* ... */ }
+```
+
+Qué responde cada export:
+
+- `playlists()` responde las listas que la persona ya tiene en el servicio: un arreglo de
+  `{ id, title, itemCount }` (`KinoHostedPlaylist`).
+- `playlistItems({ playlistId, cursor })` responde el contenido de una lista, con la misma forma que
+  [`browse`](#returns): un arreglo de `KinoItem` o una `Page` con `next`.
+- `playlistCreate({ title })` responde `{ id }` cuando tu servicio puede crear una lista nueva. Sin
+  este export, Kino nunca ofrece "Crear lista nueva" para tu plugin.
+- `playlistAddItem({ playlistId, ref })` y `playlistRemoveItem({ playlistId, ref })` agregan o quitan
+  un ítem; son independientes entre sí -- puedes tener uno sin el otro.
+- `playlistReorder({ playlistId, refs })` recibe el nuevo orden completo de la lista, como el arreglo
+  de `ref` de cada ítem, en el orden final.
+
+Lo que la persona ve en "Mis listas" con Kino 0.9.65: una lista de tu plugin se etiqueta "‹nombre› ·
+‹plugin›", mezclada con las suyas. Solo aparece el botón de la operación que de verdad exportaste --
+"Agregar" con `playlistAddItem`, "Quitar" con `playlistRemoveItem`, "Reordenar" con `playlistReorder`
+-- nunca un botón apagado ni un error por "no implementado"; un plugin que solo exporta `playlists` y
+`playlistItems` se ve de solo lectura, sin ninguno de los tres. **Renombrar la lista o eliminarla
+entera no son parte de esta capacidad**: no hay export para ninguna de las dos, así que esas dos
+opciones del menú de "Mis listas" solo existen para una lista nativa de la persona, nunca para una de
+plugin.
+
+Límites: por debajo de `"apiVersion": 10` Kino nunca llama ninguno de estos seis exports, igual que
+con cualquier export que el manifiesto no declaró. En la hoja "Agregar a lista", una lista de tu
+plugin solo aparece para un título que viene del mismo plugin que la hospeda -- agregar un video a "tu
+lista de YouTube" solo tiene sentido para un video de ese plugin de YouTube.
+
 ## Subtítulos para cualquier título { #subtitles }
 
 Exporta `subtitles({ imdbId, tmdbId, kind, season, episode, title, year, languages, file })` y Kino lista lo
