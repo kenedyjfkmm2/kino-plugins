@@ -606,7 +606,7 @@ export async function episodes(ref) {
 
 export async function resolve(ref) {
   // Only Kino 0.9.53 and older call it ("catalogOnly" is ignored there): it says so in the person's words.
-  throw kino.error("not_found", "catalog only", { userMessage: "Este catálogo no reproduce: busca el título en tus otras fuentes." });
+  throw kino.error("not_found", "catalog only", { userMessage: "Este catálogo no reproduce: busca el título en tus otros plugins." });
 }
 ```
 

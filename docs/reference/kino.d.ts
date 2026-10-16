@@ -72,7 +72,7 @@ interface KinoItem {
   quality?: string;
   /** At most 3, each at most 20 characters; shown as chips. */
   badges?: string[];
-  /** apiVersion 6: true = an 18+ entry, shown only while the person's 18+ code is unlocked on that device (Ajustes ▸ Adultos). Below apiVersion 6 it is dropped. */
+  /** apiVersion 6: true = an 18+ entry, shown only while the person's 18+ code is unlocked on that device (Ajustes ▸ Control parental). Below apiVersion 6 it is dropped. */
   adult?: boolean;
 }
 
@@ -272,7 +272,7 @@ interface KinoLiveCategory {
    * the list is ignored. Kino versions before this field ignore it.
    */
   genre?: KinoGenre;
-  /** apiVersion 6: true = an 18+ entry, shown only while the person's 18+ code is unlocked on that device (Ajustes ▸ Adultos). Below apiVersion 6 it is dropped. Every channel listed in it is 18+ too. */
+  /** apiVersion 6: true = an 18+ entry, shown only while the person's 18+ code is unlocked on that device (Ajustes ▸ Control parental). Below apiVersion 6 it is dropped. Every channel listed in it is 18+ too. */
   adult?: boolean;
 }
 
@@ -325,7 +325,7 @@ interface KinoLiveChannel {
   /** 1..9999. */
   number?: number;
   /**
-   * apiVersion 6: true = an 18+ entry, shown only while the person's 18+ code is unlocked on that device (Ajustes ▸ Adultos).
+   * apiVersion 6: true = an 18+ entry, shown only while the person's 18+ code is unlocked on that device (Ajustes ▸ Control parental).
    * Below apiVersion 6 it is dropped. On a liveSearch hit, `false` says it is plain (needed when your categories can't be
    * read and it carries no `categoryId`): mark every hit with `adult` or `categoryId`.
    */
@@ -386,7 +386,7 @@ interface KinoCategory {
   art?: string;
   /** At most 4096 characters. */
   ref: string;
-  /** apiVersion 6: true = an 18+ entry, shown only while the person's 18+ code is unlocked on that device (Ajustes ▸ Adultos). Below apiVersion 6 it is dropped. */
+  /** apiVersion 6: true = an 18+ entry, shown only while the person's 18+ code is unlocked on that device (Ajustes ▸ Control parental). Below apiVersion 6 it is dropped. */
   adult?: boolean;
 }
 

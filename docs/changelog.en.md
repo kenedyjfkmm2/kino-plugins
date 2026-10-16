@@ -99,7 +99,7 @@ nothing on it makes you change your plugin. How to use each one and still run on
   the synopsis, year, genres, score and runtime. [A title's own details](contract.md#details).
 - **`"catalogOnly": true`** in `kino-plugin.json`: your plugin lists and describes titles but plays none (a TMDB
   catalog, a list of new releases, ratings). Kino 0.9.54 sends its titles to "Buscar dónde verlo" (the person's other
-  sources) instead of opening the player, never uses it as a source of a title (the search, "Ver otras fuentes",
+  sources) instead of opening the player, never uses it as a source of a title (the search, "Ver en otros plugins",
   "Buscar por fuente", the player's "Servidor"), never calls its `resolve`, does not count it as a source in "Elige tus
   fuentes", and the install sheet says "Solo catálogo: no reproduce videos" ("Catalog only: doesn't play videos"). With
   the field, `resolve` is no longer required and one of `home`, `browse`, `search` or `meta` is enough; `download`,

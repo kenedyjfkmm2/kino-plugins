@@ -255,7 +255,7 @@ Las reglas:
   que falla o no está exportada simplemente no se vuelve a pedir durante 30 minutos: tus canales se
   siguen listando.
 - `adult: true` en una categoría o un canal: desde apiVersion 6 marca una entrada +18, que Kino muestra
-  solo mientras el código +18 de la persona está desbloqueado en ese aparato (Ajustes ▸ Adultos) y
+  solo mientras el código +18 de la persona está desbloqueado en ese aparato (Ajustes ▸ Control parental) y
   vuelve a esconder cuando lo bloquea; por debajo de apiVersion 6 se descarta. Todo canal de una
   categoría +18 cuenta como +18, y un canal +18 nunca entra a "Recientes". Mira
   [Contenido +18](contract.md#adult).

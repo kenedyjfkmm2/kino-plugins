@@ -611,7 +611,7 @@ export async function episodes(ref) {
 
 export async function resolve(ref) {
   // Solo lo llaman Kino 0.9.53 y anteriores (ahí "catalogOnly" se ignora): lo dice con palabras para la persona.
-  throw kino.error("not_found", "catalog only", { userMessage: "Este catálogo no reproduce: busca el título en tus otras fuentes." });
+  throw kino.error("not_found", "catalog only", { userMessage: "Este catálogo no reproduce: busca el título en tus otros plugins." });
 }
 ```
 

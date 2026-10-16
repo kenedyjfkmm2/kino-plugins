@@ -106,7 +106,7 @@ the title with one request to your `/stream` (at most 3 titles per search).
 
 - **Typed search**: your catalogs with `search`. With none (or when they return nothing), Kino searches
   the text on TMDB and offers only what your `stream` can play by IMDb id.
-- **A title's page** ("Ver otras fuentes"): only when your `stream` takes IMDb ids for that type. A
+- **A title's page** ("Ver en otros plugins"): only when your `stream` takes IMDb ids for that type. A
   catalog-only addon (Cinemeta, Kitsu) or a channels-only one does not answer here.
 - **Inside a "Ver más"**: when that row's catalog takes `search`, the search goes to your addon with
   `search=…` and pages with `skip`.
@@ -290,8 +290,8 @@ it was.
 | "El addon tardó demasiado en responder. Intenta de nuevo en un rato." | The manifest did not arrive within 15 s. |
 | "No pude conectarme con el addon. Revisa la dirección y tu conexión." | The name does not resolve or the server does not answer. |
 | "El servidor del addon respondió con un error (N)…" | An error status reading the manifest. |
-| "<addon> solo trae el catálogo. Busca este título en tus otras fuentes." | The addon has no `stream`: it is catalog-only. A Kino plugin gets the same route with [`"catalogOnly": true`](contract.md#catalog-only) (Kino 0.9.54). |
-| "<addon> no reproduce este título. Búscalo en tus otras fuentes." | The title's type or id is outside your `stream`'s `types`/`idPrefixes`. |
+| "<addon> solo trae el catálogo. Busca este título en tus otros plugins." | The addon has no `stream`: it is catalog-only. A Kino plugin gets the same route with [`"catalogOnly": true`](contract.md#catalog-only) (Kino 0.9.54). |
+| "<addon> no reproduce este título. Búscalo en tus otros plugins." | The title's type or id is outside your `stream`'s `types`/`idPrefixes`. |
 | "Esta fuente ya no tiene este título (<addon>)" | Your `/stream` answered an empty list, or nothing playable. |
 | "<addon> solo tiene enlaces P2P de este título" | Every stream was P2P. |
 | "Falta la dirección del addon: escríbela en Configurar" | On an update check, the "Servidor del addon" setting is empty. |

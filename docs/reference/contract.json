@@ -43,7 +43,7 @@
     "discoverable": { "default": true },
     "categories": { "values": ["movies", "series", "anime", "live", "radio", "subtitles", "utilities", "adult"], "message": "The \"categories\" field must be a list without repeats of: movies, series, anime, live, radio, subtitles, utilities, adult" },
     "catalogOnly": {
-      "$comment": "\"catalogOnly\": true (Kino 0.9.54, additive: no apiVersion, valid at every one, an older Kino ignores the field). The plugin lists and describes titles and plays none: resolve is not required, one of atLeastOneOf is, forbiddenCapabilities and forbiddenFields (streamHosts, and browser only as true: \"pages\" reads pages for the catalog) are refused. Kino never calls its resolve, never lists it as a source of a title (search, Ver otras fuentes, Buscar dónde verlo, the player's Servidor) and sends its titles to the person's other sources. For Kino 0.9.53 and older also declare and export resolve (throwing not_found) and search or home.",
+      "$comment": "\"catalogOnly\": true (Kino 0.9.54, additive: no apiVersion, valid at every one, an older Kino ignores the field). The plugin lists and describes titles and plays none: resolve is not required, one of atLeastOneOf is, forbiddenCapabilities and forbiddenFields (streamHosts, and browser only as true: \"pages\" reads pages for the catalog) are refused. Kino never calls its resolve, never lists it as a source of a title (search, Ver en otros plugins, Buscar dónde verlo, the player's Servidor) and sends its titles to the person's other sources. For Kino 0.9.53 and older also declare and export resolve (throwing not_found) and search or home.",
       "notBooleanMessage": "The \"catalogOnly\" field must be true or false",
       "atLeastOneOf": ["home", "browse", "search", "meta"],
       "atLeastOneOfMessage": "A \"catalogOnly\" plugin must declare \"home\", \"browse\", \"search\" or \"meta\"",
@@ -51,7 +51,7 @@
       "forbiddenFields": ["streamHosts", "browser"],
       "forbidsMessage": "A \"catalogOnly\" plugin can't declare \"{name}\": it doesn't play videos",
       "consentLine": { "es": "Solo catálogo: no reproduce videos", "en": "Catalog only: doesn't play videos" },
-      "playerMessage": { "es": "{name} solo muestra el catálogo: no reproduce videos. Busca este título en tus otras fuentes.", "en": "{name} only shows the catalog: it doesn't play videos. Look for this title in your other sources." },
+      "playerMessage": { "es": "{name} solo muestra el catálogo: no reproduce videos. Busca este título en tus otros plugins.", "en": "{name} only shows the catalog: it doesn't play videos. Look for this title in your other plugins." },
       "resolveNote": "catalogOnly: Kino {fromApp} y posteriores nunca llaman resolve ni sign; solo un Kino anterior, que no conoce el campo",
       "olderApps": {
         "compatibleNote": "catalogOnly existe desde Kino {fromApp}: un Kino anterior ignora el campo y lo instala como un plugin normal, así que tu resolve debe fallar con kino.error(\"not_found\", …) y un mensaje para la persona",
@@ -454,8 +454,8 @@
     "errorCodes": ["invalid_request", "rate_limited", "no_tmdb_key", "not_found", "too_large", "timeout", "network", "unavailable", "not_allowed"],
     "noKeyCode": "no_tmdb_key",
     "noKeyUserMessage": {
-      "es": "Agrega tu llave de TMDB en Ajustes ▸ Tu llave de TMDB",
-      "en": "Add your TMDB key in Settings ▸ Your TMDB key"
+      "es": "Agrega tu llave de TMDB en Ajustes de todos los perfiles ▸ Llaves",
+      "en": "Add your TMDB key in Settings for all profiles ▸ Keys"
     }
   },
   "cookies": {

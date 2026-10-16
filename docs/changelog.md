@@ -104,7 +104,7 @@ ignora), y nada de esto te obliga a cambiar tu plugin. Cómo usar cada cosa y se
 - **`"catalogOnly": true`** en `kino-plugin.json`: tu plugin muestra y describe títulos, pero no reproduce ninguno (un
   catálogo de TMDB, una lista de estrenos, calificaciones). Kino 0.9.54 manda sus títulos a «Buscar dónde verlo» (las
   otras fuentes de la persona) en vez de abrir el reproductor, nunca lo usa como fuente de un título (la búsqueda, «Ver
-  otras fuentes», «Buscar por fuente», el «Servidor» del reproductor), nunca llama su `resolve`, no lo cuenta como fuente
+  en otros plugins», «Buscar por fuente», el «Servidor» del reproductor), nunca llama su `resolve`, no lo cuenta como fuente
   en «Elige tus fuentes» y la ventana de instalación dice «Solo catálogo: no reproduce videos». Con el campo, `resolve`
   deja de ser obligatorio y basta una de `home`, `browse`, `search` o `meta`; se rechazan `download`, `drm`, `channels`,
   `streamHosts` y `"browser": true` (`"pages"` sí vale).

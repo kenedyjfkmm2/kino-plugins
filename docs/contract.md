@@ -257,7 +257,7 @@ el resto sobrevive; lo que pasa de un tope se corta. Un `Stream` es todo o nada.
 | `kind` | `"movie"`, `"series"`, (apiVersion 2) `"live"` o (apiVersion 8) `"music"` o `"podcast"`; un ítem `live` se queda en una fila de `home` solo desde apiVersion 6 (por debajo se quita del Inicio: mira [Canales en tus filas de Inicio](live-channels.md#home-rows)). Un ítem `series` de un plugin que no declara `episodes` se descarta: nunca se podría abrir; un ítem `live` de un plugin apiVersion 1 también se descarta (mira [Canales en vivo](live-channels.md#live-items)), y un ítem `music` o `podcast` de un plugin por debajo de apiVersion 8 (mira [Música y podcasts](#music-podcasts)), que no necesita `episodes`. |
 | Campos de texto | `title` es obligatorio y no vacío, hasta 200 caracteres. `overview` hasta 2000; `lang` y `quality` hasta 20 (por ejemplo `"es"`, `"1080p"`); `year` hasta 10 (se acepta un número y se convierte). El texto más largo se corta; el texto de `SeriesInfo` y `Episode` se corta igual (200 caracteres para títulos, 2000 para sinopsis). |
 | Campos extra del ítem | Todos opcionales; uno mal puesto se ignora, no el ítem. `genres` máximo 5, cada uno de máximo 30 caracteres; `badges` (se muestran como chips, p. ej. `"HD"`, `"Latino"`) máximo 3 de máximo 20; `rating` de 0 a 10; `runtimeMinutes` de 1 a 1000; `ids.tmdb` un entero positivo (Kino lo usa para emparejar tu título con TMDB, para volver a encontrarlo desde la búsqueda y para enriquecer su página de información -- mira abajo); `ids.imdb` cumple `^tt\d{5,10}$` (también enriquece la página de información de una película cuando no tienes `ids.tmdb`). El `airDate` de un capítulo es `YYYY-MM-DD`. |
-| `adult` | Desde apiVersion 6, `adult: true` marca una entrada +18: Kino la muestra solo mientras el código +18 de la persona está desbloqueado en ese aparato (Ajustes ▸ Adultos), y la vuelve a esconder cuando lo bloquea; por debajo de apiVersion 6 se descarta. Aplica en Inicio, en la búsqueda, en "Ver más", en tu sección y en Categorías. Mira [Contenido +18](#adult). |
+| `adult` | Desde apiVersion 6, `adult: true` marca una entrada +18: Kino la muestra solo mientras el código +18 de la persona está desbloqueado en ese aparato (Ajustes ▸ Control parental), y la vuelve a esconder cuando lo bloquea; por debajo de apiVersion 6 se descarta. Aplica en Inicio, en la búsqueda, en "Ver más", en tu sección y en Categorías. Mira [Contenido +18](#adult). |
 | Imágenes | `poster`, `backdrop` y `still` tienen que ser URL `http` o `https` de máximo 2048 caracteres, o se ignoran (las versiones de Kino anteriores a la que aceptó `http` en imágenes ignoran las `http`). Las imágenes las carga Kino directamente y **no** se revisan contra `hosts` (son solo para mostrar), y Kino no envía tus headers ni tus cookies con ellas. Es la única excepción a la regla de hosts, con un límite: una imagen en la red local, en una dirección IP privada o reservada, o en un nombre local (`localhost`, `.local`, `.lan`, …) también se ignora, y también un nombre sin punto por `http` (`router`, `nas`), salvo que esté en un servidor que la persona escribió en tus ajustes. Una dirección IPv4 pública sirve. |
 
 ### `ids.tmdb` enriquece la página de información, no solo el emparejamiento { #tmdb }
@@ -705,13 +705,13 @@ Lo que hacen con él Kino 0.9.54 y posteriores:
   si son varias, se abre la lista de fuentes; si ninguna, dice "Ninguno de tus plugins tiene este
   título…". El mismo desvío que tienen los [addons de Stremio](stremio.md) sin streams.
 - **Nunca es fuente de un título.** A su `search` no se le pregunta cuando Kino lista las fuentes de un
-  título (la pantalla de búsqueda, "Ver otras fuentes" del reproductor, "Buscar dónde verlo"), no se
+  título (la pantalla de búsqueda, "Ver en otros plugins" del reproductor, "Buscar dónde verlo"), no se
   ofrece en "Buscar por fuente" y nunca aparece en la lista "Servidor" del reproductor. Dentro de sus
   propias páginas (su sección, "Ver más", la búsqueda dentro de un "Ver más") su catálogo se recorre y se
   busca como siempre.
 - **Su `resolve` nunca se llama.** Si igual un título suyo llega al reproductor, el reproductor dice
-  "&lt;nombre&gt; solo muestra el catálogo: no reproduce videos. Busca este título en tus otras
-  fuentes." (o su versión en inglés), con "Ver otras fuentes" debajo.
+  "&lt;nombre&gt; solo muestra el catálogo: no reproduce videos. Busca este título en tus otros
+  plugins." (o su versión en inglés), con "Ver en otros plugins" debajo.
 - **No es una fuente en "Elige tus fuentes"**, y Kino lo archiva en Utilidades cuando el manifiesto no
   trae `categories`.
 - La ventana de consentimiento dice "Solo catálogo: no reproduce videos". No es un permiso: una
@@ -742,7 +742,7 @@ permite que un mismo manifiesto sirva para los dos:
     ```js
     export async function resolve() {
       // Solo Kino 0.9.53 y anteriores llaman esto: 0.9.54+ manda primero a la persona a sus otras fuentes.
-      throw kino.error("not_found", "catalog only", { userMessage: "Este catálogo no reproduce: busca el título en tus otras fuentes." });
+      throw kino.error("not_found", "catalog only", { userMessage: "Este catálogo no reproduce: busca el título en tus otros plugins." });
     }
     ```
 
@@ -985,7 +985,7 @@ ganando un host rechazado, tu `userMessage` válido y `auth_required` (que conse
 
 Desde `"apiVersion": 6`, `adult: true` en un ítem, en una de tus [Categorías](section-theme.md#categories)
 o en una categoría o un canal en vivo marca una entrada +18. Kino la muestra solo mientras el código +18
-de la persona está desbloqueado en ese aparato (Ajustes ▸ Adultos) y la vuelve a esconder cuando lo
+de la persona está desbloqueado en ese aparato (Ajustes ▸ Control parental) y la vuelve a esconder cuando lo
 bloquea. No hay nada que declarar en el manifiesto. Por debajo de apiVersion 6 una entrada `adult: true`
 se descarta, como antes.
 

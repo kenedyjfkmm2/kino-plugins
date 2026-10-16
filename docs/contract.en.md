@@ -249,7 +249,7 @@ all or nothing.
 | `kind` | `"movie"`, `"series"`, (apiVersion 2) `"live"` or (apiVersion 8) `"music"` or `"podcast"`; a `live` item stays in a `home` row only from apiVersion 6 (below it, it is dropped from Home: see [Channels in your Home rows](live-channels.md#home-rows)). A `series` item from a plugin that does not declare `episodes` is dropped: it could never be opened; a `live` item from an apiVersion 1 plugin is dropped too (see [Live channels](live-channels.md#live-items)), and a `music` or `podcast` item from a plugin below apiVersion 8 (see [Music and podcasts](#music-podcasts)), which needs no `episodes`. |
 | Text fields | `title` is required and non-blank, up to 200 characters. `overview` up to 2000; `lang` and `quality` up to 20 (for example `"es"`, `"1080p"`); `year` up to 10 (a number is accepted and converted). Longer text is cut; the text of `SeriesInfo` and `Episode` is cut the same way (200 characters for titles, 2000 for overviews). |
 | Extra item fields | All optional; a wrong one is ignored, not the item. `genres` at most 5, each at most 30 characters; `badges` (shown as chips, e.g. `"HD"`, `"Latino"`) at most 3 of at most 20; `rating` from 0 to 10; `runtimeMinutes` from 1 to 1000; `ids.tmdb` a positive integer (Kino uses it to match your title with TMDB, to find it again from search, and to enrich its info page -- see below); `ids.imdb` matches `^tt\d{5,10}$` (also enriches a movie's info page when you have no `ids.tmdb`). An episode's `airDate` is `YYYY-MM-DD`. |
-| `adult` | From apiVersion 6, `adult: true` marks an 18+ entry: Kino shows it only while the person's 18+ code is unlocked on that device (Ajustes ▸ Adultos), and hides it again when they lock it; below apiVersion 6 it is dropped. It applies on Home, in search, "Ver más", your section and Categorías. See [18+ content](#adult). |
+| `adult` | From apiVersion 6, `adult: true` marks an 18+ entry: Kino shows it only while the person's 18+ code is unlocked on that device (Ajustes ▸ Control parental), and hides it again when they lock it; below apiVersion 6 it is dropped. It applies on Home, in search, "Ver más", your section and Categorías. See [18+ content](#adult). |
 | Images | `poster`, `backdrop` and `still` must be `http` or `https` URLs of at most 2048 characters, or they are ignored (Kino versions before the one that accepted `http` for images ignore the `http` ones). Images are loaded by Kino directly and are **not** checked against `hosts` (they are display only), and Kino does not send your headers or cookies with them. This is the one exception to the host rule, with one limit: an image on the home network, a private or reserved IP address, or a local name (`localhost`, `.local`, `.lan`, …) is ignored too, and so is a name without a dot over `http` (`router`, `nas`), unless it is on a server the person typed in your settings. A public IPv4 address is fine. |
 
 ### `ids.tmdb` enriches the info page, not only matching { #tmdb }
@@ -673,12 +673,12 @@ What Kino 0.9.54 and later do with it:
   other plugins first: one source that has it plays, several open the sources list, none says "Ninguno
   de tus plugins tiene este título…". The same detour [Stremio addons](stremio.md) without streams get.
 - **It is never a source of a title.** Its `search` is not asked when Kino lists the sources of a title
-  (the search screen, the player's "Ver otras fuentes", "Buscar dónde verlo"), it is not offered in
+  (the search screen, the player's "Ver en otros plugins", "Buscar dónde verlo"), it is not offered in
   "Buscar por fuente", and it never shows up in the player's "Servidor" list. Inside its own pages (its
   section, "Ver más", searching inside a "Ver más" page) its catalog is browsed and searched as always.
 - **Its `resolve` is never called.** If a title of it reaches the player anyway, the player says
-  "&lt;name&gt; solo muestra el catálogo: no reproduce videos. Busca este título en tus otras fuentes."
-  (or its English version), with "Ver otras fuentes" under it.
+  "&lt;name&gt; solo muestra el catálogo: no reproduce videos. Busca este título en tus otros plugins."
+  (or its English version), with "Ver en otros plugins" under it.
 - **It is not a source in "Elige tus fuentes"**, and Kino files it under Utilidades when the manifest
   has no `categories`.
 - The consent sheet says "Solo catálogo: no reproduce videos" ("Catalog only: doesn't play videos"). It
@@ -708,7 +708,7 @@ manifest serve both:
     ```js
     export async function resolve() {
       // Only Kino 0.9.53 and older call this: 0.9.54+ sends the person to their other sources first.
-      throw kino.error("not_found", "catalog only", { userMessage: "Este catálogo no reproduce: busca el título en tus otras fuentes." });
+      throw kino.error("not_found", "catalog only", { userMessage: "Este catálogo no reproduce: busca el título en tus otros plugins." });
     }
     ```
 
@@ -949,7 +949,7 @@ valid `userMessage` and `auth_required` (which keeps its button) still win over 
 
 From `"apiVersion": 6`, `adult: true` on an item, on one of your [Categorías](section-theme.md#categories)
 tiles, or on a live category or channel marks an 18+ entry. Kino shows it only while the person's 18+
-code is unlocked on that device (Ajustes ▸ Adultos) and hides it again when they lock it. Nothing to
+code is unlocked on that device (Ajustes ▸ Control parental) and hides it again when they lock it. Nothing to
 declare in the manifest. Below apiVersion 6 an `adult: true` entry is dropped, as before.
 
 - It applies on Home, in search, "Ver más", your section, Categorías and En vivo. A row or a group left

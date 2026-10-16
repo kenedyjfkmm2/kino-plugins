@@ -235,7 +235,7 @@ The rules:
   inside the window, at most 100 per channel and one per start time. A `guide` that fails or is not
   exported is simply not asked again for 30 minutes: your channels still list.
 - `adult: true` on a category or a channel: from apiVersion 6 it marks an 18+ entry, shown only while
-  the person's 18+ code is unlocked on that device (Ajustes ▸ Adultos) and hidden again when they lock
+  the person's 18+ code is unlocked on that device (Ajustes ▸ Control parental) and hidden again when they lock
   it; below apiVersion 6 it is dropped. Every channel of an 18+ category counts as 18+, and an 18+
   channel never enters "Recientes". See [18+ content](contract.md#adult).
 - While a channel plays, Kino may resolve the neighbouring channel ahead so zapping is quick (cancelled
