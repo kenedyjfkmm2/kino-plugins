@@ -23,10 +23,12 @@ What changed in Kino that matters when you write a plugin, by app version. Every
 `"apiVersion": 10` ("Este plugin necesita una versión más nueva de Kino"), so declare 10 only if you
 use the `playlists` capability.
 
-- **`playlists`** (apiVersion 10): a plugin can expose, inside Kino's "Mis listas", the playlists
-  the person already has in your service's account, next to their own. Six exports, every one
-  independently optional -- unlike `channels`, which requires two --, not even `playlists()` itself:
-  `playlists()`, `playlistItems({ playlistId, cursor })`, `playlistCreate({ title })`,
+- **`playlists`** (apiVersion 10): the SDK now accepts a plugin declaring this capability -- the
+  contract for the day Kino's UI connects to it, so a plugin can expose, inside Kino's "Mis listas",
+  the playlists the person already has in your service's account, next to their own. For now no
+  installed or announced plugin uses it, and that UI connection doesn't exist yet. Six exports, every
+  one independently optional -- unlike `channels`, which requires two --, not even `playlists()`
+  itself: `playlists()`, `playlistItems({ playlistId, cursor })`, `playlistCreate({ title })`,
   `playlistAddItem({ playlistId, ref })`, `playlistRemoveItem({ playlistId, ref })` and
   `playlistReorder({ playlistId, refs })`. Nothing to do with [`KinoPlaylist`](live-channels.md#live-contract)
   (the M3U/IPTV list under En vivo) or the `kind: "playlist"` signed in [`sign()`](signed-streams.md).

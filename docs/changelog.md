@@ -23,10 +23,12 @@ está en [el contrato](contract.md) y en [los archivos de referencia](reference/
 `"apiVersion": 10` ("Este plugin necesita una versión más nueva de Kino"), así que declara 10 solo si
 usas la capacidad `playlists`.
 
-- **`playlists`** (apiVersion 10): un plugin puede exponer, dentro de "Mis listas" de Kino, las
-  listas que la persona ya tiene en la cuenta de tu servicio, junto a las suyas. Seis exports, todos
-  independientemente opcionales -- a diferencia de `channels`, que exige dos --, ni siquiera
-  `playlists()` mismo: `playlists()`, `playlistItems({ playlistId, cursor })`,
+- **`playlists`** (apiVersion 10): el SDK ahora acepta que un plugin declare esta capacidad -- el
+  contrato para que, el día que la interfaz de Kino se conecte a ella, un plugin pueda exponer,
+  dentro de "Mis listas", las listas que la persona ya tiene en la cuenta de tu servicio, junto a las
+  suyas. Por ahora ningún plugin instalado ni anunciado la usa, y esa conexión con la interfaz
+  todavía no existe. Seis exports, todos independientemente opcionales -- a diferencia de `channels`,
+  que exige dos --, ni siquiera `playlists()` mismo: `playlists()`, `playlistItems({ playlistId, cursor })`,
   `playlistCreate({ title })`, `playlistAddItem({ playlistId, ref })`,
   `playlistRemoveItem({ playlistId, ref })` y `playlistReorder({ playlistId, refs })`. No tiene nada
   que ver con [`KinoPlaylist`](live-channels.md#live-contract) (la lista M3U/IPTV de En vivo) ni con

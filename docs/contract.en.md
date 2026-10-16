@@ -543,14 +543,17 @@ any item, and `adult: true` follows the same 18+ lock.
 
 ## The person's playlists on your plugin (apiVersion 10, Kino 0.9.65) { #playlists }
 
-With `"apiVersion": 10` a plugin may declare the `"playlists"` capability to expose, inside Kino's
-"Mis listas", the playlists the person already has in their account on that service, next to their
-own. Unlike music and podcasts (above), this really is a capability -- the same as `channels` or
-`tracking` -- but the other way around from `channels`: its six exports are **all independently
-optional**, including `playlists()` itself. Declare the capability and export only the ones your
-service actually supports; not one of them is required. No red approval. An older Kino refuses an
-apiVersion 10 plugin with "Este plugin necesita una versión más nueva de Kino", so declare 10 only
-when you declare this capability.
+With `"apiVersion": 10` a plugin may declare the `"playlists"` capability: the contract for the day
+Kino's UI connects to it, so the playlists the person already has in their account on that service
+show up inside Kino's "Mis listas", next to their own. For now it is just that -- a complete, honest
+contract, with no UI connection yet: no installed or announced plugin uses this capability, and Kino
+itself doesn't call any of these six exports anywhere on screen. It's infrastructure for a future
+plugin that might need it, not something anyone uses today. Unlike music and podcasts (above), this
+really is a capability -- the same as `channels` or `tracking` -- but the other way around from
+`channels`: its six exports are **all independently optional**, including `playlists()` itself.
+Declare the capability and export only the ones your service actually supports; not one of them is
+required. No red approval. An older Kino refuses an apiVersion 10 plugin with "Este plugin necesita
+una versión más nueva de Kino", so declare 10 only when you declare this capability.
 
 `"playlist"` means three distinct, unrelated things in this SDK: the ones in this section, on your
 plugin's own service (`KinoHostedPlaylist`); the M3U/IPTV list you build for
@@ -585,25 +588,26 @@ What each export answers:
 - `playlistItems({ playlistId, cursor })` answers a playlist's contents, in the same shape as
   [`browse`](#returns): an array of `KinoItem` or a `Page` with `next`.
 - `playlistCreate({ title })` answers `{ id }` when your service can create a new playlist. Without
-  this export, Kino never offers "Crear lista nueva" for your plugin.
+  this export, Kino's UI will not offer "Crear lista nueva" for your plugin.
 - `playlistAddItem({ playlistId, ref })` and `playlistRemoveItem({ playlistId, ref })` add or remove
   an item; they are independent of each other -- you may have one without the other.
 - `playlistReorder({ playlistId, refs })` gets the playlist's whole new order, as the array of every
   item's `ref`, in the final order.
 
-What the person sees in "Mis listas" with Kino 0.9.65: a playlist from your plugin is labelled
-"‹name› · ‹plugin›", mixed in with their own. Only the button for an operation you actually exported
-shows up -- "Agregar" with `playlistAddItem`, "Quitar" with `playlistRemoveItem`, "Reordenar" with
-`playlistReorder` -- never a disabled button, never a "not implemented" error; a plugin that exports
-only `playlists` and `playlistItems` looks read-only, with none of the three. **Renaming the playlist
-or deleting it outright are not part of this capability**: there is no export for either one, so
-those two options in the "Mis listas" menu exist only for one of the person's own native playlists,
-never for a plugin's.
+What "Mis listas" will do the day Kino's UI connects to this capability (not built in any version
+yet): a playlist from your plugin will be labelled "‹name› · ‹plugin›", mixed in with their own. Only
+the button for an operation you actually exported will show up -- "Agregar" with `playlistAddItem`,
+"Quitar" with `playlistRemoveItem`, "Reordenar" with `playlistReorder` -- never a disabled button,
+never a "not implemented" error; a plugin that exports only `playlists` and `playlistItems` will look
+read-only, with none of the three. **Renaming the playlist or deleting it outright will not be part
+of this capability**: there is no export for either one, so those two options in the "Mis listas"
+menu will exist only for one of the person's own native playlists, never for a plugin's.
 
-Limits: below `"apiVersion": 10` Kino never calls any of these six exports, same as any export the
-manifest didn't declare. In the "Agregar a lista" sheet, a playlist from your plugin only shows up
-for a title that comes from the same plugin that hosts it -- adding a video to "your YouTube
-playlist" only makes sense for a video from that YouTube plugin.
+Limits: declaring the `playlists` capability with an apiVersion below 10 is refused when the plugin
+is installed (`The "playlists" capability needs apiVersion 10`). In the "Agregar a lista" sheet, a
+playlist from your plugin will only show up for a title that comes from the same plugin that hosts
+it -- adding a video to "your YouTube playlist" will only make sense for a video from that YouTube
+plugin.
 
 ## Subtitles for any title { #subtitles }
 

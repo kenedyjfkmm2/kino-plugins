@@ -564,14 +564,18 @@ tamaños de fila y de página que cualquier ítem, y `adult: true` sigue el mism
 
 ## Playlists de la persona en el plugin (apiVersion 10, Kino 0.9.65) { #playlists }
 
-Con `"apiVersion": 10` un plugin puede declarar la capacidad `"playlists"` para exponer, dentro de
-"Mis listas" de Kino, las listas que la persona ya tiene en su cuenta de ese servicio, junto a las
-suyas. A diferencia de música y podcasts (arriba), esta sí es una capacidad de verdad -- igual que
-`channels` o `tracking` -- pero al revés de `channels`: sus seis exports son **todos
-independientemente opcionales**, incluido `playlists()` mismo. Declara la capacidad y exporta solo
-los que tu servicio sabe hacer; no hace falta ni uno. Sin aprobación en rojo. Un Kino anterior a 0.9.65
-rechaza un plugin apiVersion 10 con "Este plugin necesita una versión más nueva de Kino", así que
-declara 10 solo cuando declares esta capacidad.
+Con `"apiVersion": 10` un plugin puede declarar la capacidad `"playlists"`: el contrato con el que,
+el día que la interfaz de Kino la conecte, las listas que la persona ya tiene en su cuenta de ese
+servicio aparecerán dentro de "Mis listas" de Kino, junto a las suyas. Por ahora es solo eso -- un
+contrato completo y honesto, sin ninguna conexión todavía a esa interfaz: ningún plugin instalado ni
+anunciado usa esta capacidad, y el propio Kino no llama ninguno de estos seis exports en ninguna
+pantalla. Es infraestructura para un plugin futuro que pueda necesitarla, no algo que alguien use hoy.
+A diferencia de música y podcasts (arriba), esta sí es una capacidad de verdad -- igual que `channels`
+o `tracking` -- pero al revés de `channels`: sus seis exports son **todos independientemente
+opcionales**, incluido `playlists()` mismo. Declara la capacidad y exporta solo los que tu servicio
+sabe hacer; no hace falta ni uno. Sin aprobación en rojo. Un Kino anterior a 0.9.65 rechaza un plugin
+apiVersion 10 con "Este plugin necesita una versión más nueva de Kino", así que declara 10 solo cuando
+declares esta capacidad.
 
 `"playlist"` significa tres cosas distintas y sin relación en este SDK: las de esta sección, en el
 servicio de tu plugin (`KinoHostedPlaylist`); la lista M3U/IPTV que armas para
@@ -605,25 +609,26 @@ Qué responde cada export:
 - `playlistItems({ playlistId, cursor })` responde el contenido de una lista, con la misma forma que
   [`browse`](#returns): un arreglo de `KinoItem` o una `Page` con `next`.
 - `playlistCreate({ title })` responde `{ id }` cuando tu servicio puede crear una lista nueva. Sin
-  este export, Kino nunca ofrece "Crear lista nueva" para tu plugin.
+  este export, la interfaz de Kino no ofrecerá "Crear lista nueva" para tu plugin.
 - `playlistAddItem({ playlistId, ref })` y `playlistRemoveItem({ playlistId, ref })` agregan o quitan
   un ítem; son independientes entre sí -- puedes tener uno sin el otro.
 - `playlistReorder({ playlistId, refs })` recibe el nuevo orden completo de la lista, como el arreglo
   de `ref` de cada ítem, en el orden final.
 
-Lo que la persona ve en "Mis listas" con Kino 0.9.65: una lista de tu plugin se etiqueta "‹nombre› ·
-‹plugin›", mezclada con las suyas. Solo aparece el botón de la operación que de verdad exportaste --
-"Agregar" con `playlistAddItem`, "Quitar" con `playlistRemoveItem`, "Reordenar" con `playlistReorder`
--- nunca un botón apagado ni un error por "no implementado"; un plugin que solo exporta `playlists` y
-`playlistItems` se ve de solo lectura, sin ninguno de los tres. **Renombrar la lista o eliminarla
-entera no son parte de esta capacidad**: no hay export para ninguna de las dos, así que esas dos
-opciones del menú de "Mis listas" solo existen para una lista nativa de la persona, nunca para una de
-plugin.
+Lo que hará la interfaz de "Mis listas" el día que Kino la conecte a esta capacidad (todavía sin
+construir en ninguna versión): una lista de tu plugin se etiquetará "‹nombre› · ‹plugin›", mezclada
+con las suyas. Solo aparecerá el botón de la operación que de verdad exportaste -- "Agregar" con
+`playlistAddItem`, "Quitar" con `playlistRemoveItem`, "Reordenar" con `playlistReorder` -- nunca un
+botón apagado ni un error por "no implementado"; un plugin que solo exporta `playlists` y
+`playlistItems` se verá de solo lectura, sin ninguno de los tres. **Renombrar la lista o eliminarla
+entera no serán parte de esta capacidad**: no hay export para ninguna de las dos, así que esas dos
+opciones del menú de "Mis listas" existirán solo para una lista nativa de la persona, nunca para una
+de plugin.
 
-Límites: por debajo de `"apiVersion": 10` Kino nunca llama ninguno de estos seis exports, igual que
-con cualquier export que el manifiesto no declaró. En la hoja "Agregar a lista", una lista de tu
-plugin solo aparece para un título que viene del mismo plugin que la hospeda -- agregar un video a "tu
-lista de YouTube" solo tiene sentido para un video de ese plugin de YouTube.
+Límites: declarar la capacidad `playlists` con un apiVersion menor a 10 se rechaza al instalar el
+plugin (`The "playlists" capability needs apiVersion 10`). En la hoja "Agregar a lista", una lista de
+tu plugin aparecerá solo para un título que venga del mismo plugin que la hospeda -- agregar un video
+a "tu lista de YouTube" solo tendrá sentido para un video de ese plugin de YouTube.
 
 ## Subtítulos para cualquier título { #subtitles }
 
